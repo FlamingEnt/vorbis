@@ -116,41 +116,43 @@ if (NOT BUILD_FRAMEWORK)
     target_link_libraries(vorbisenc PUBLIC vorbis)
     target_link_libraries(vorbisfile PUBLIC vorbis)
 
-    install(FILES ${VORBIS_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/vorbis)
+    if(DO_INSTALL)
+        install(FILES ${VORBIS_PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}/vorbis)
 
-    install(TARGETS vorbis vorbisenc vorbisfile
-        EXPORT VorbisTargets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-    export(EXPORT VorbisTargets NAMESPACE Vorbis:: FILE VorbisTargets.cmake)
-
-    if(INSTALL_CMAKE_PACKAGE_MODULE)
-
-    set(CMAKE_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Vorbis)
-
-        install(EXPORT VorbisTargets
-            DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
-            NAMESPACE Vorbis::
+        install(TARGETS vorbis vorbisenc vorbisfile
+            EXPORT VorbisTargets
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
+        export(EXPORT VorbisTargets NAMESPACE Vorbis:: FILE VorbisTargets.cmake)
+
+        if(INSTALL_CMAKE_PACKAGE_MODULE)
+
+        set(CMAKE_INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Vorbis)
+
+            install(EXPORT VorbisTargets
+                DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
+                NAMESPACE Vorbis::
+            )
 
 
-        include(CMakePackageConfigHelpers)
+            include(CMakePackageConfigHelpers)
 
-        configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/VorbisConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfig.cmake
-            INSTALL_DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
-        )
+            configure_package_config_file(${PROJECT_SOURCE_DIR}/cmake/VorbisConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfig.cmake
+                INSTALL_DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
+            )
 
-        write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/VorbisConfigVersion.cmake
-            COMPATIBILITY SameMajorVersion
-        )
+            write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/VorbisConfigVersion.cmake
+                COMPATIBILITY SameMajorVersion
+            )
 
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfigVersion.cmake
-            DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
-        )
+            install(FILES ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/VorbisConfigVersion.cmake
+                DESTINATION ${CMAKE_INSTALL_CONFIGDIR}
+            )
 
+        endif()
     endif()
 else()
     add_library(vorbis ${VORBIS_PUBLIC_HEADERS} ${VORBIS_HEADERS} ${VORBIS_SOURCES} ${VORBISFILE_SOURCES} ${VORBISENC_SOURCES})
